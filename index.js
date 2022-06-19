@@ -33,6 +33,24 @@ class BlockChain {
     this.index++;
   }
 
+  validateChain() {
+    for (let i = 1; i < this.blocks.length; i++) {
+      const currentBlock = this.blocks[i];
+      const previousBlock = this.blocks[i - 1];
+
+      // Check if the current block's hash is correct
+      if (currentBlock.hash !== currentBlock.generateHash()) {
+        return false;
+      }
+
+      // Check if the current block's previous hash is correct
+      if (currentBlock.previousHash !== previousBlock.hash) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   addBlock(data) {
     const index = this.index;
     const previousHash = this.getLatestBlock().hash;
@@ -41,8 +59,10 @@ class BlockChain {
     this.increaseIndex();
     this.blocks.push(block);
   }
+
+  countBlocks() {
+    return this.blocks.length;
+  }
 }
 
-const block = new Block(0, null, "Genesis");
-const blockChain = new BlockChain(block);
-console.log(blockChain);
+const blockChain = new BlockChain();
